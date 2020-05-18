@@ -129,8 +129,7 @@ public class DwsAnswerAction extends ActionSupport {
                 return RESPONSE_MOBILE;
             } else {
                 String htmlPath = directory.getHtmlPath();
-                request.getRequestDispatcher("/" + htmlPath).forward(request,
-                        response);
+                request.getRequestDispatcher("/" + htmlPath).forward(request, response);
             }
         }
         return NONE;
