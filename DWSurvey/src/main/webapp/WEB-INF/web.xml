@@ -195,5 +195,11 @@
 	<filter-mapping>
 		<filter-name>CharSet</filter-name>
 		<url-pattern>*.html</url-pattern>
+		<url-pattern>*.jsp</url-pattern>
+		<url-pattern>*.js</url-pattern>
+		<url-pattern>*.css</url-pattern>
+		<url-pattern>*.xml</url-pattern>
+		<url-pattern>*.json</url-pattern>
+		<url-pattern>*.txt</url-pattern>
 	</filter-mapping>
 </web-app>
