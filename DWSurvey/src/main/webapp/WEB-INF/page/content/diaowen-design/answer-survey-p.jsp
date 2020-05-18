@@ -138,7 +138,7 @@ label.error{
 								
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 									</div>
 									<div class="quCoItem">
@@ -230,7 +230,7 @@ label.error{
 								
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 									</div>
 									<div class="quCoItem">
@@ -322,7 +322,7 @@ label.error{
 								<div class="surveyQuItem">
 									<div class="surveyQuItemContent">
 										<div class="quCoTitle">
-											<div class="quCoNum">${i.count }、</div>
+											<div class="quCoNum">${i.count }.</div>
 											<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 										</div>
 										<div class="quCoItem"><ul>
@@ -375,7 +375,7 @@ label.error{
 							<div class="surveyQuItem">
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 									</div>
 									<div class="quCoItem quOrderByCoItem">
@@ -471,7 +471,7 @@ label.error{
 							<div class="surveyQuItem">
 								<div class="surveyQuItemContent" style="min-height: 35px;">
 									<div class="quCoTitle" style="background: rgb(243, 247, 247);">
-										<%-- <div class="quCoNum" >${i.count }、</div> --%>
+										<%-- <div class="quCoNum" >${i.count }.</div> --%>
 										<div class="editAble quCoTitleEdit" style="padding-left: 15px;">${en.quTitle}</div>
 									</div>
 								</div>
@@ -506,7 +506,7 @@ label.error{
 								
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 									</div>
 									<div class="quCoItem">

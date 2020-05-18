@@ -301,7 +301,7 @@ function substring(json) {
 									<td colspan="3">
 										<div class="surveyResultQu">
 										<input type="hidden" name="quICount" value="${i.count }">
-							<div class="r-qu-body-title">${i.count }、${en.quTitle }[${en.quType.cnName }]</div>
+							<div class="r-qu-body-title">${i.count }.${en.quTitle }[${en.quType.cnName }]</div>
 							<div class="r-qu-body-content">
 								<c:choose>
 									<%--是非题 --%>

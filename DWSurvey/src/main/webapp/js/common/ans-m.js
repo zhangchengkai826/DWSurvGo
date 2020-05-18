@@ -179,7 +179,7 @@ $(document).ready(function(){
     function resetQuNum(){
         var quTitleNums=$(".quTitleNum");
         $.each(quTitleNums,function(i,item){
-            $(this).text((i+1)+"、")
+            $(this).text((i+1)+".")
         });
     }
 
