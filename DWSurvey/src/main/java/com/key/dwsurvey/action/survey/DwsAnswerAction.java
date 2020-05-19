@@ -37,6 +37,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.WebUtils;
 
@@ -139,15 +142,27 @@ public class DwsAnswerAction extends ActionSupport {
                 String htmlPath = directory.getHtmlPath();
 
                 ServletContext sc = ServletActionContext.getServletContext();
-                
+
+                String htmlContent = FileUtils.readFileToString(new File(sc.getRealPath("/" + htmlPath)), StandardCharsets.UTF_8);
+                String userid = request.getParameter("userid");
+                String quesid = request.getParameter("quesid");
+
+                Document doc = Jsoup.parse(htmlContent);
+                Element form = doc.select("form").first();
+                form.prepend(String.format("<input type=\"hidden\" id=\"userid\" name=\"userid\" value=\"%s\" />", userid));
+                form.prepend(String.format("<input type=\"hidden\" id=\"quesid\" name=\"quesid\" value=\"%s\" />", quesid));
+
+                htmlContent = doc.toString();
+
                 PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\execute.txt");
                 ps.println(request.getQueryString());
-                ps.println(request.getParameter("userid"));
-                ps.println(request.getParameter("quesid"));
-                ps.println(FileUtils.readFileToString(new File(sc.getRealPath("/" + htmlPath)), StandardCharsets.UTF_8));
+                ps.println(userid);
+                ps.println(quesid);
+                ps.println(htmlContent);
                 ps.close();
 
-                request.getRequestDispatcher("/" + htmlPath).forward(request, response);
+                // request.getRequestDispatcher("/" + htmlPath).forward(request, response);
+                response.getWriter().write(htmlContent);
             }
         }
         return NONE;
