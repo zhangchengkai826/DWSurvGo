@@ -241,18 +241,18 @@ public class DwsAnswerAction extends ActionSupport {
             httppost.setEntity(se);
 
             HttpResponse response = httpclient.execute(httppost);
+            // int statusCode = response.getStatusLine().getStatusCode();
 
             // PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\statusCode.txt");
-            // ps.println(response.getStatusLine().getStatusCode());
+            // ps.println(statusCode);
             // ps.close();
 
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == HttpStatus.SC_OK) {
-                HttpEntity resEntity = response.getEntity();
-                // 解析json格式的返回结果
-                JSONObject json = JSONObject.fromObject(EntityUtils.toString(resEntity));
-                EntityUtils.consume(resEntity);
-            }
+            // if (statusCode == HttpStatus.SC_OK) {
+            //     HttpEntity resEntity = response.getEntity();
+            //     // 解析json格式的返回结果
+            //     JSONObject json = JSONObject.fromObject(EntityUtils.toString(resEntity));
+            //     EntityUtils.consume(resEntity);
+            // }
         } catch (Exception e) {
             e.printStackTrace();
         }
