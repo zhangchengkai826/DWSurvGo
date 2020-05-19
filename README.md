@@ -32,6 +32,13 @@ jdbc.password=123456,.
 
 ### 启动访问
 
+Tomcat服务器启动前要确保环境变量JAVA_OPTS="-Dfile.encoding=UTF-8"
+
+```
+set JAVA_OPTS="-Dfile.encoding=UTF-8"
+bin\catalina.bat start
+```
+
 配置完成后，启动服务在浏览器中输入如`localhost:8080/diaowen`相应的地址看到登录页面，表示已经安装成功。
 
 初始账号：`service@diaowen.net` 密码：`123456`
