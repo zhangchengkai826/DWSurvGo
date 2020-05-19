@@ -26,6 +26,11 @@
 			<artifactId>xssprotest</artifactId>
 			<version>1.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>net.spssw</groupId>
+			<artifactId>spssw</artifactId>
+			<version>1.66</version>
+		</dependency>
 
 
 		<dependency>
@@ -34,11 +39,7 @@
 			<version>1.1.2</version>
 		</dependency>
 -->
-		<dependency>
-			<groupId>net.spssw</groupId>
-			<artifactId>spssw</artifactId>
-			<version>1.66</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

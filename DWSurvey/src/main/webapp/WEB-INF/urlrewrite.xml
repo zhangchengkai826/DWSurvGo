@@ -7,7 +7,7 @@
     http://www.tuckey.org/urlrewrite/
 
 -->
-<urlrewrite>
+<urlrewrite use-query-string="true">
     <!-- <rule>
               <from>/(.*).html</from>
               <to>test/freemarker-test.jsp?id=$1</to>
@@ -21,12 +21,12 @@
         <to>/dwsurvey.action?sid=$1</to>
     </rule>
     <rule>
-        <from>/dwsurvey/(.*).html</from>
-        <to>/dws-answer.action?sid=$1</to>
+        <from>^/dwsurvey/(.*).html?(.*)$</from>
+        <to>/dws-answer.action?sid=$1&amp;$2</to>
     </rule>
     <rule>
-        <from>/dwsurvey/(.*).html?userid=(.*)</from>
-        <to>/dws-answer.action?sid=$1&amp;userid=$2</to>
+        <from>/dwsurvey/(.*).html</from>
+        <to>/dws-answer.action?sid=$1</to>
     </rule>
     <!--
     <rule>

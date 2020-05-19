@@ -1,5 +1,6 @@
 package com.key.dwsurvey.action.survey;
 
+import com.google.common.io.Files;
 import com.itextpdf.text.log.Logger;
 import com.key.common.QuType;
 import com.key.common.base.action.CrudActionSupport;
@@ -17,6 +18,8 @@ import com.octo.captcha.service.image.ImageCaptchaService;
 import com.opensymphony.xwork2.ActionSupport;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -29,12 +32,15 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.WebUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +48,8 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -101,9 +109,7 @@ public class DwsAnswerAction extends ActionSupport {
     protected final static String RESPONSE_MSG = "responseMsg";
     protected final static String RESPONSE_MOBILE = "responseMobile";
 
-    private String uri = "";
     private String sid;
-    private String userid;
     private String surveyId;
     @Autowired
     private SurveyAnswerManager surveyAnswerManager;
@@ -131,6 +137,16 @@ public class DwsAnswerAction extends ActionSupport {
                 return RESPONSE_MOBILE;
             } else {
                 String htmlPath = directory.getHtmlPath();
+
+                ServletContext sc = ServletActionContext.getServletContext();
+                
+                PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\execute.txt");
+                ps.println(request.getQueryString());
+                ps.println(request.getParameter("userid"));
+                ps.println(request.getParameter("quesid"));
+                ps.println(FileUtils.readFileToString(new File(sc.getRealPath("/" + htmlPath)), StandardCharsets.UTF_8));
+                ps.close();
+
                 request.getRequestDispatcher("/" + htmlPath).forward(request, response);
             }
         }
@@ -183,32 +199,36 @@ public class DwsAnswerAction extends ActionSupport {
         return NONE;
     }
 
-    public void upload(String url, String currentURL) {
+    private void contactBackend(String url, String userid, String quesid) {
         try {
-            HttpClient httpclient = new DefaultHttpClient();
+            HttpClient httpclient = HttpClientBuilder.create().build();
             HttpPost httppost = new HttpPost(url);
-            ArrayList<HashMap<String, String>> enclosureList = new ArrayList<HashMap<String, String>>();
 
             // json格式的请求数据封装
             JSONObject param = new JSONObject();
-            param.put(currentURL, "string");
+            param.put("userid", userid);
+            param.put("quesid", quesid);
+
+            PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\param.txt");
+            ps.println(userid.toString());
+            ps.println(quesid.toString());
+            ps.println(param.toString());
+            ps.close();
 
             StringEntity se = new StringEntity(param.toString());
             httppost.setEntity(se);
-            PrintStream out = System.out;
-            PrintStream ps = new PrintStream("/Users/luo/Desktop/a.txt");
-            System.setOut(ps);
-            System.out.println(param.toString());
-            System.setOut(out);
+
             HttpResponse response = httpclient.execute(httppost);
+
+            ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\statusCode.txt");
+            ps.println(response.getStatusLine().getStatusCode());
+            ps.close();
+
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == HttpStatus.SC_OK) {
-                Logger logger = null;
-                logger.debug("服务器正常响应.....");
                 HttpEntity resEntity = response.getEntity();
                 // 解析json格式的返回结果
-                JSONObject json = JSONObject.fromObject(EntityUtils.toString(resEntity).toString());
-                logger.debug(json.toString());
+                JSONObject json = JSONObject.fromObject(EntityUtils.toString(resEntity));
                 EntityUtils.consume(resEntity);
             }
         } catch (Exception e) {
@@ -220,11 +240,7 @@ public class DwsAnswerAction extends ActionSupport {
         HttpServletRequest request = Struts2Utils.getRequest();
         HttpServletResponse response = Struts2Utils.getResponse();
 
-        StringBuffer formFrom = request.getRequestURL();
-        String username = request.getParameter("username");
-        String currentURL = request.getParameter("currentURL");
-        // String newformFrom = formFrom.toString();
-        upload("http://localhost:8080/answer", currentURL);
+        contactBackend("http://localhost:8080/answer", request.getParameter("userid"), request.getParameter("quesid"));
 
         try {
             String ipAddr = ipService.getIp(request);
