@@ -290,12 +290,12 @@ public class DwsAnswerAction extends ActionSupport {
                     || (effectiveIp != null && effectiveIp == 1 && ipNum > 0)) {
                 return RELOAD_ANSER_ERROR;
             }
-            if (ipNum >= refreshNum) {
-                String code = request.getParameter("jcaptchaInput");
-                if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
-                    return ANSWER_CODE_ERROR;
-                }
-            }
+            // if (ipNum >= refreshNum) {
+            //     String code = request.getParameter("jcaptchaInput");
+            //     if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
+            //         return ANSWER_CODE_ERROR;
+            //     }
+            // }
             Map<String, Map<String, Object>> quMaps = buildSaveSurveyMap(request);
             String addr = ipService.getCountry(ipAddr);
             String city = ipService.getCurCityByCountry(addr);
@@ -337,12 +337,12 @@ public class DwsAnswerAction extends ActionSupport {
                     || (effectiveIp != null && effectiveIp == 1 && ipNum > 0)) {
                 return RELOAD_ANSER_ERROR_M;
             }
-            if (ipNum >= refreshNum) {
-                String code = request.getParameter("jcaptchaInput");
-                if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
-                    return ANSWER_CODE_ERROR_M;
-                }
-            }
+            // if (ipNum >= refreshNum) {
+            //     String code = request.getParameter("jcaptchaInput");
+            //     if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
+            //         return ANSWER_CODE_ERROR_M;
+            //     }
+            // }
 
             Map<String, Map<String, Object>> quMaps = buildSaveSurveyMap(request);
             String addr = ipService.getCountry(ipAddr);
