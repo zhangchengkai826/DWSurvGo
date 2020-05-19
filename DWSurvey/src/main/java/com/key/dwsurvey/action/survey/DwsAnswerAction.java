@@ -143,23 +143,27 @@ public class DwsAnswerAction extends ActionSupport {
 
                 ServletContext sc = ServletActionContext.getServletContext();
 
-                String htmlContent = FileUtils.readFileToString(new File(sc.getRealPath("/" + htmlPath)), StandardCharsets.UTF_8);
+                String htmlContent = FileUtils.readFileToString(new File(sc.getRealPath("/" + htmlPath)),
+                        StandardCharsets.UTF_8);
                 String userid = request.getParameter("userid");
                 String quesid = request.getParameter("quesid");
 
                 Document doc = Jsoup.parse(htmlContent);
                 Element form = doc.select("form").first();
-                form.prepend(String.format("<input type=\"hidden\" id=\"userid\" name=\"userid\" value=\"%s\" />", userid));
-                form.prepend(String.format("<input type=\"hidden\" id=\"quesid\" name=\"quesid\" value=\"%s\" />", quesid));
+                form.prepend(
+                        String.format("<input type=\"hidden\" id=\"userid\" name=\"userid\" value=\"%s\" />", userid));
+                form.prepend(
+                        String.format("<input type=\"hidden\" id=\"quesid\" name=\"quesid\" value=\"%s\" />", quesid));
 
                 htmlContent = doc.toString();
 
-                PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\execute.txt");
-                ps.println(request.getQueryString());
-                ps.println(userid);
-                ps.println(quesid);
-                ps.println(htmlContent);
-                ps.close();
+                // PrintStream ps = new
+                // PrintStream("C:\\Users\\andys\\Desktop\\tmp\\execute.txt");
+                // ps.println(request.getQueryString());
+                // ps.println(userid);
+                // ps.println(quesid);
+                // ps.println(htmlContent);
+                // ps.close();
 
                 // request.getRequestDispatcher("/" + htmlPath).forward(request, response);
                 response.getWriter().write(htmlContent);
@@ -219,25 +223,28 @@ public class DwsAnswerAction extends ActionSupport {
             HttpClient httpclient = HttpClientBuilder.create().build();
             HttpPost httppost = new HttpPost(url);
 
+            httppost.setHeader("Content-Type", "application/json");
+            httppost.setHeader("Accept", "application/json");
+
             // json格式的请求数据封装
             JSONObject param = new JSONObject();
             param.put("userid", userid);
             param.put("quesid", quesid);
 
-            PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\param.txt");
-            ps.println(userid.toString());
-            ps.println(quesid.toString());
-            ps.println(param.toString());
-            ps.close();
+            // PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\param.txt");
+            // ps.println(userid.toString());
+            // ps.println(quesid.toString());
+            // ps.println(param.toString());
+            // ps.close();
 
             StringEntity se = new StringEntity(param.toString());
             httppost.setEntity(se);
 
             HttpResponse response = httpclient.execute(httppost);
 
-            ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\statusCode.txt");
-            ps.println(response.getStatusLine().getStatusCode());
-            ps.close();
+            // PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\statusCode.txt");
+            // ps.println(response.getStatusLine().getStatusCode());
+            // ps.close();
 
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == HttpStatus.SC_OK) {
@@ -255,7 +262,15 @@ public class DwsAnswerAction extends ActionSupport {
         HttpServletRequest request = Struts2Utils.getRequest();
         HttpServletResponse response = Struts2Utils.getResponse();
 
-        contactBackend("http://localhost:8080/answer", request.getParameter("userid"), request.getParameter("quesid"));
+        String userid = request.getParameter("userid");
+        String quesid = request.getParameter("quesid");
+
+        // PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\save.txt");
+        // ps.println(userid);
+        // ps.println(quesid);
+        // ps.close();
+
+        contactBackend("http://localhost:8080/answer", userid, quesid);
 
         try {
             String ipAddr = ipService.getIp(request);
