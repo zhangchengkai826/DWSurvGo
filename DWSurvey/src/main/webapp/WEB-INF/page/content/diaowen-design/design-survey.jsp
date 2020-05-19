@@ -105,7 +105,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">1、</div>
+										<div class="quCoNum">1.</div>
 										<div class="editAble quCoTitleEdit" >题标题？</div>
 										<input type="hidden" name="quTitleSaveTag" value="0">
 									</div>
@@ -182,7 +182,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">1、</div>
+										<div class="quCoNum">1.</div>
 										<div class="editAble quCoTitleEdit" >题标题？</div>
 										<input type="hidden" name="quTitleSaveTag" value="0">
 									</div>
@@ -273,7 +273,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">1、</div>
+										<div class="quCoNum">1.</div>
 										<div class="editAble quCoTitleEdit" >题标题？</div>
 										<input type="hidden" name="quTitleSaveTag" value="0">
 									</div>
@@ -332,7 +332,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">1、</div>
+										<div class="quCoNum">1.</div>
 										<div class="editAble quCoTitleEdit" >请问你的年级是？</div>
 										<input type="hidden" name="quTitleSaveTag" value="0">
 									</div>
@@ -405,7 +405,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">1、</div>
+										<div class="quCoNum">1.</div>
 										<div class="editAble quCoTitleEdit" >题标题？</div>
 										<input type="hidden" name="quTitleSaveTag" value="0">
 									</div>
@@ -487,7 +487,7 @@
 									</div>
 									<div class="surveyQuItemContent">
 										<div class="quCoTitle">
-											<div class="quCoNum">1、</div>
+											<div class="quCoNum">1.</div>
 											<div class="editAble quCoTitleEdit" >您的生日是？</div>
 											<input type="hidden" name="quTitleSaveTag" value="0">
 										</div>
@@ -550,7 +550,7 @@
 									</div>
 									<div class="surveyQuItemContent">
 										<div class="quCoTitle">
-											<div class="quCoNum">1、</div>
+											<div class="quCoNum">1.</div>
 											<div class="editAble quCoTitleEdit" >您的邮箱是？</div>
 											<input type="hidden" name="quTitleSaveTag" value="0">
 										</div>
@@ -609,7 +609,7 @@
 									</div>
 									<div class="surveyQuItemContent">
 										<div class="quCoTitle">
-											<div class="quCoNum">1、</div>
+											<div class="quCoNum">1.</div>
 											<div class="editAble quCoTitleEdit" >您的性别是？</div>
 											<input type="hidden" name="quTitleSaveTag" value="0">
 										</div>
@@ -686,7 +686,7 @@
 									</div>
 									<div class="surveyQuItemContent">
 										<div class="quCoTitle">
-											<div class="quCoNum">1、</div>
+											<div class="quCoNum">1.</div>
 											<div class="editAble quCoTitleEdit" >您的最高学历是？</div>
 											<input type="hidden" name="quTitleSaveTag" value="0">
 										</div>
@@ -783,7 +783,7 @@
 									</div>
 									<div class="surveyQuItemContent">
 										<div class="quCoTitle">
-											<div class="quCoNum">1、</div>
+											<div class="quCoNum">1.</div>
 											<div class="editAble quCoTitleEdit" >请问您婚否？</div>
 											<input type="hidden" name="quTitleSaveTag" value="0">
 										</div>
@@ -860,7 +860,7 @@
 									</div>
 									<div class="surveyQuItemContent">
 										<div class="quCoTitle">
-											<div class="quCoNum">1、</div>
+											<div class="quCoNum">1.</div>
 											<div class="editAble quCoTitleEdit" >您的月平均收入是？</div>
 											<input type="hidden" name="quTitleSaveTag" value="0">
 										</div>
@@ -1007,7 +1007,7 @@
 								</div>
 								<div class="surveyQuItemContent" style="min-height: 45px;">
 									<div class="quCoTitle">
-										<div class="quCoNum" style="display: none;">1、</div>
+										<div class="quCoNum" style="display: none;">1.</div>
 										<div class="editAble quCoTitleEdit" ><p><strong>分段标记</strong></p></div>
 										<input type="hidden" name="quTitleSaveTag" value="0">
 									</div>
@@ -1061,13 +1061,13 @@
 			<div><h2 class=""><a href="" class="ellipsis">问卷页</a></h2></div>
 			
 			<div style="padding-left: 5px;">
-			<h2 class=""><a href="" class="ellipsis">1、请问你的年级是？</a></h2>
-			<h2 class=""><a href="" class="ellipsis">2、请问你的年级是？</a></h2>
-			<h2 class=""><a href="" class="ellipsis">3、请问你的年级是？</a></h2>
-			<h2 class=""><a href="" class="ellipsis">4、请问你的年级是？</a></h2>
+			<h2 class=""><a href="" class="ellipsis">1.请问你的年级是？</a></h2>
+			<h2 class=""><a href="" class="ellipsis">2.请问你的年级是？</a></h2>
+			<h2 class=""><a href="" class="ellipsis">3.请问你的年级是？</a></h2>
+			<h2 class=""><a href="" class="ellipsis">4.请问你的年级是？</a></h2>
 			<h2 class=""><a href="" class="ellipsis">下一页</a></h2>
-			<h2 class=""><a href="" class="ellipsis">5、请问你的年级是？</a></h2>
-			<h2 class=""><a href="" class="ellipsis">6、请问你的年级是级是级是？</a></h2>
+			<h2 class=""><a href="" class="ellipsis">5.请问你的年级是？</a></h2>
+			<h2 class=""><a href="" class="ellipsis">6.请问你的年级是级是级是？</a></h2>
 			</div>
 			</div>
 			<h2 class=""><a href="" class="ellipsis">结束页</a></h2>
@@ -1144,7 +1144,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 										<input type="hidden" name="quTitleSaveTag" value="1">
 									</div>
@@ -1276,7 +1276,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 										<input type="hidden" name="quTitleSaveTag" value="1">
 									</div>
@@ -1411,7 +1411,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 										<input type="hidden" name="quTitleSaveTag" value="1">
 									</div>
@@ -1486,7 +1486,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 										<input type="hidden" name="quTitleSaveTag" value="1">
 									</div>
@@ -1621,7 +1621,7 @@
 								</div>
 								<div class="surveyQuItemContent" style="min-height: 45px;">
 									<div class="quCoTitle">
-										<div class="quCoNum" style="display: none;">${i.count }、</div>
+										<div class="quCoNum" style="display: none;">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 										<input type="hidden" name="quTitleSaveTag" value="1">
 									</div>
@@ -1682,7 +1682,7 @@
 								</div>
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
-										<div class="quCoNum">${i.count }、</div>
+										<div class="quCoNum">${i.count }.</div>
 										<div class="editAble quCoTitleEdit" >${en.quTitle}</div>
 										<input type="hidden" name="quTitleSaveTag" value="1">
 									</div>

@@ -80,7 +80,7 @@ $(document).ready(function(){
 	function resetQuNum(){
 		var quCoNums=$(".quCoNum");
 		$.each(quCoNums,function(i,item){
-			$(this).html((i+1)+"、");
+			$(this).html((i+1)+".");
 		});
 		
 	}
@@ -874,7 +874,7 @@ function substring(json) {
 				
 							
 							<div class="r-qu-body-title">
-								<div class="quCoNum">${i.count }、</div>
+								<div class="quCoNum">${i.count }.</div>
 								<div class="quCoTitleText">${en.quTitle }[${en.quType.cnName }]</div>
 							</div>
 							<div class="r-qu-body-content">
@@ -1125,7 +1125,7 @@ function substring(json) {
 																<div class="rowItemOptionName" style="display: none;">${rowItem.optionName }</div>
 																<input type="hidden" name="rowItemAnCount" value="${rowItem.anCount }">
 															</td>
-															<td class="quChenRowTd" colspan="5"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}、${rowItem.optionName }</label></td>
+															<td class="quChenRowTd" colspan="5"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}.${rowItem.optionName }</label></td>
 														</tr>
 														<tr class="columnItemTr">
 															<td colspan="6">
@@ -1191,7 +1191,7 @@ function substring(json) {
 															<div class="rowItemOptionName" style="display: none;">${rowItem.optionName }</div>
 															<input type="hidden" name="rowItemAnCount" value="${rowItem.anCount }">
 														</td>
-														<td class="quChenRowTd" colspan="5"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}、${rowItem.optionName }</label></td>
+														<td class="quChenRowTd" colspan="5"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}.${rowItem.optionName }</label></td>
 													</tr>
 													<tr class="columnItemTr">
 														<td colspan="6">
@@ -1257,7 +1257,7 @@ function substring(json) {
 																<div class="rowItemOptionName" style="display: none;">${rowItem.optionName }</div>
 																<input type="hidden" name="rowItemAnCount" value="${rowItem.anCount }">
 															</td>
-															<td class="quChenRowTd" colspan="5"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}、${rowItem.optionName }</label></td>
+															<td class="quChenRowTd" colspan="5"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}.${rowItem.optionName }</label></td>
 														</tr>
 														<tr class="columnItemTr">
 															<td colspan="6">
@@ -1281,7 +1281,7 @@ function substring(json) {
 																<div class="rowItemOptionName" style="display: none;">${rowItem.optionName }</div>
 																<input type="hidden" name="rowItemAnCount" value="${rowItem.anCount }">
 															</td>
-															<td class="quChenRowTd" colspan="5"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}、${rowItem.optionName }</label></td>
+															<td class="quChenRowTd" colspan="5"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}.${rowItem.optionName }</label></td>
 													</tr>
 													<tr class="columnItemTr">
 															<td colspan="6">
@@ -1353,7 +1353,7 @@ function substring(json) {
 													<c:forEach items="${en.rows }" var="rowItem" varStatus="rowI">
 													<tr class="rowItemTr">
 														<td width="15px">&nbsp;</td>
-														<td class="quChenRowTd" colspan="4"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}、${rowItem.optionName }</label></td>
+														<td class="quChenRowTd" colspan="4"><label class="editAble quCoOptionEdit" style="font-size: 14px;">${rowI.count}.${rowItem.optionName }</label></td>
 													</tr>
 													<c:forEach items="${en.columns }" var="columnItem" varStatus="colI">
 													<tr class="columnItemTr">

@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
-        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN" "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
 
 <!--
 
@@ -8,24 +7,28 @@
     http://www.tuckey.org/urlrewrite/
 
 -->
-<urlrewrite>
-		<!-- <rule>
+<urlrewrite use-query-string="true">
+    <!-- <rule>
               <from>/(.*).html</from>
               <to>test/freemarker-test.jsp?id=$1</to>
        </rule> -->
-       <rule>
-              <from>/resp/(.*)/(.*)/(.*)/(.*).html</from>
-              <to>/nosm/response!input.action?year=$1&amp;month=$2&amp;day=$3&amp;parentId=$4</to>
-       </rule>
-        <rule>
-            <from>/wenjuan/(.*).html</from>
-            <to>/dwsurvey.action?sid=$1</to>
-        </rule>
-        <rule>
-              <from>/dwsurvey/(.*).html</from>
-            <to>/dws-answer.action?sid=$1</to>
-       </rule>
-   <!--
+    <rule>
+        <from>/resp/(.*)/(.*)/(.*)/(.*).html</from>
+        <to>/nosm/response!input.action?year=$1&amp;month=$2&amp;day=$3&amp;parentId=$4</to>
+    </rule>
+    <rule>
+        <from>/wenjuan/(.*).html</from>
+        <to>/dwsurvey.action?sid=$1</to>
+    </rule>
+    <rule>
+        <from>^/dwsurvey/(.*).html?(.*)$</from>
+        <to>/dws-answer.action?sid=$1&amp;$2</to>
+    </rule>
+    <rule>
+        <from>/dwsurvey/(.*).html</from>
+        <to>/dws-answer.action?sid=$1</to>
+    </rule>
+    <!--
     <rule>
         <note>
             The rule means that requests to /test/status/ will be redirected to /rewrite-status
@@ -110,4 +113,3 @@
     -->
 
 </urlrewrite>
-

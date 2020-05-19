@@ -832,7 +832,7 @@ function resetQuItem(){
 		$(this).find(".quInputCase input[name='orderById']").val(i+1);
 		var quType=$(this).find("input[name='quType']").val();
 		if(quType!="PAGETAG" && quType!="PARAGRAPH"){
-			$(this).find(".quCoTitle .quCoNum").text((indexNum++)+"、");
+			$(this).find(".quCoTitle .quCoNum").text((indexNum++)+".");
 		}
 	});
 	var pageTags=$("#dwSurveyQuContent .surveyQuItemBody input[name='quType'][value='PAGETAG']");

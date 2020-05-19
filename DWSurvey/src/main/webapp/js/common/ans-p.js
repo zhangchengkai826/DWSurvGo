@@ -308,7 +308,7 @@ $(document).ready(function(){
     function resetQuNum(){
         var quCoNums=$(".quCoNum");
         $.each(quCoNums,function(i,item){
-            $(this).html((i+1)+"、");
+            $(this).html((i+1)+".");
         });
 
     }

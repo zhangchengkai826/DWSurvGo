@@ -1,5 +1,6 @@
 package com.key.dwsurvey.action.survey;
 
+import com.google.common.io.Files;
 import com.itextpdf.text.log.Logger;
 import com.key.common.QuType;
 import com.key.common.base.action.CrudActionSupport;
@@ -17,6 +18,8 @@ import com.octo.captcha.service.image.ImageCaptchaService;
 import com.opensymphony.xwork2.ActionSupport;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -29,12 +32,18 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.WebUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +51,8 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,10 +60,10 @@ import java.util.Map;
 
 /**
  * 问卷 action
+ * 
  * @author KeYuan(keyuan258@gmail.com)
  *
- * https://github.com/wkeyuan/DWSurvey
- * http://www.dwsurvey.net
+ *         https://github.com/wkeyuan/DWSurvey http://www.dwsurvey.net
  *
  */
 @Namespaces({ @Namespace("/") })
@@ -77,7 +88,8 @@ import java.util.Map;
         @Result(name = DwsAnswerAction.RELOAD_ANSWER_SUCCESS_M, location = "dws-answer!answerSuccessM.action?surveyId=${surveyId}", type = Struts2Utils.REDIRECT),
         @Result(name = DwsAnswerAction.RESPONSE_MOBILE, location = "dws-answer!answerMobile.action?surveyId=${surveyId}", type = Struts2Utils.REDIRECT) })
 
-@AllowedMethods({"saveMobile","answerSuccess","answerMobile","answerFailure","answerError","answerSuccessM","ajaxCheckSurvey"})
+@AllowedMethods({ "saveMobile", "answerSuccess", "answerMobile", "answerFailure", "answerError", "answerSuccessM",
+        "ajaxCheckSurvey" })
 public class DwsAnswerAction extends ActionSupport {
     private static final long serialVersionUID = -2289729314160067840L;
 
@@ -100,7 +112,6 @@ public class DwsAnswerAction extends ActionSupport {
     protected final static String RESPONSE_MSG = "responseMsg";
     protected final static String RESPONSE_MOBILE = "responseMobile";
 
-    private String uri = "";
     private String sid;
     private String surveyId;
     @Autowired
@@ -121,22 +132,43 @@ public class DwsAnswerAction extends ActionSupport {
         SurveyDirectory directory = directoryManager.getSurveyBySid(sid);
         if (directory != null) {
             surveyId = directory.getId();
-            String filterStatus = filterStatus(directory,request);
-            if(filterStatus!=null){
+            String filterStatus = filterStatus(directory, request);
+            if (filterStatus != null) {
                 return filterStatus;
             }
             if (HttpRequestDeviceUtils.isMobileDevice(request)) {
                 return RESPONSE_MOBILE;
             } else {
                 String htmlPath = directory.getHtmlPath();
-                request.getRequestDispatcher("/" + htmlPath).forward(request,
-                        response);
+
+                ServletContext sc = ServletActionContext.getServletContext();
+
+                String htmlContent = FileUtils.readFileToString(new File(sc.getRealPath("/" + htmlPath)), StandardCharsets.UTF_8);
+                String userid = request.getParameter("userid");
+                String quesid = request.getParameter("quesid");
+
+                Document doc = Jsoup.parse(htmlContent);
+                Element form = doc.select("form").first();
+                form.prepend(String.format("<input type=\"hidden\" id=\"userid\" name=\"userid\" value=\"%s\" />", userid));
+                form.prepend(String.format("<input type=\"hidden\" id=\"quesid\" name=\"quesid\" value=\"%s\" />", quesid));
+
+                htmlContent = doc.toString();
+
+                PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\execute.txt");
+                ps.println(request.getQueryString());
+                ps.println(userid);
+                ps.println(quesid);
+                ps.println(htmlContent);
+                ps.close();
+
+                // request.getRequestDispatcher("/" + htmlPath).forward(request, response);
+                response.getWriter().write(htmlContent);
             }
         }
         return NONE;
     }
 
-    private String filterStatus(SurveyDirectory directory,HttpServletRequest request){
+    private String filterStatus(SurveyDirectory directory, HttpServletRequest request) {
         SurveyDetail surveyDetail = directory.getSurveyDetail();
         int rule = surveyDetail.getRule();
         Integer ynEndNum = surveyDetail.getYnEndNum();
@@ -145,10 +177,9 @@ public class DwsAnswerAction extends ActionSupport {
         Date endTime = surveyDetail.getEndTime();
         Integer anserNum = directory.getAnswerNum();
 
-        if (directory.getSurveyQuNum() <= 0
-                || directory.getSurveyState() != 1 ||
-                (anserNum!=null && ynEndNum==1 && anserNum > endNum ) ||
-                (endTime!=null && ynEndTime==1 && endTime.getTime() < (new Date().getTime())) ){
+        if (directory.getSurveyQuNum() <= 0 || directory.getSurveyState() != 1
+                || (anserNum != null && ynEndNum == 1 && anserNum > endNum)
+                || (endTime != null && ynEndTime == 1 && endTime.getTime() < (new Date().getTime()))) {
             request.setAttribute("surveyName", "目前该问卷已暂停收集，请稍后再试");
             request.setAttribute("msg", "目前该问卷已暂停收集，请稍后再试");
             return RESPONSE_MSG;
@@ -171,43 +202,48 @@ public class DwsAnswerAction extends ActionSupport {
         HttpServletResponse response = Struts2Utils.getResponse();
         SurveyDirectory directory = directoryManager.getSurvey(surveyId);
         if (directory != null) {
-            String filterStatus = filterStatus(directory,request);
-            if(filterStatus!=null){
+            String filterStatus = filterStatus(directory, request);
+            if (filterStatus != null) {
                 return filterStatus;
             }
             String htmlPath = directory.getHtmlPath();
-            htmlPath = htmlPath.substring(0,htmlPath.lastIndexOf("/"));
-            request.getRequestDispatcher("/" + htmlPath+"/m_"+surveyId+".html").forward(request,response);
+            htmlPath = htmlPath.substring(0, htmlPath.lastIndexOf("/"));
+            request.getRequestDispatcher("/" + htmlPath + "/m_" + surveyId + ".html").forward(request, response);
             return NONE;
         }
         return NONE;
     }
-    public void upload(String url, String currentURL){
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(url);
-            ArrayList<HashMap<String,String>> enclosureList = new ArrayList<HashMap<String, String>>();
 
-            //json格式的请求数据封装
+    private void contactBackend(String url, String userid, String quesid) {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            HttpPost httppost = new HttpPost(url);
+
+            // json格式的请求数据封装
             JSONObject param = new JSONObject();
-            param.put(currentURL, "string");
+            param.put("userid", userid);
+            param.put("quesid", quesid);
+
+            PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\param.txt");
+            ps.println(userid.toString());
+            ps.println(quesid.toString());
+            ps.println(param.toString());
+            ps.close();
 
             StringEntity se = new StringEntity(param.toString());
             httppost.setEntity(se);
-            PrintStream out = System.out;
-            PrintStream ps = new PrintStream("/Users/luo/Desktop/a.txt");
-            System.setOut(ps);
-            System.out.println(param.toString());
-            System.setOut(out);
+
             HttpResponse response = httpclient.execute(httppost);
+
+            ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\statusCode.txt");
+            ps.println(response.getStatusLine().getStatusCode());
+            ps.close();
+
             int statusCode = response.getStatusLine().getStatusCode();
-            if(statusCode == HttpStatus.SC_OK){
-                Logger logger = null;
-                logger.debug("服务器正常响应.....");
+            if (statusCode == HttpStatus.SC_OK) {
                 HttpEntity resEntity = response.getEntity();
-                 //解析json格式的返回结果
-                JSONObject json = JSONObject.fromObject(EntityUtils.toString(resEntity).toString());
-                logger.debug(json.toString());
+                // 解析json格式的返回结果
+                JSONObject json = JSONObject.fromObject(EntityUtils.toString(resEntity));
                 EntityUtils.consume(resEntity);
             }
         } catch (Exception e) {
@@ -219,13 +255,7 @@ public class DwsAnswerAction extends ActionSupport {
         HttpServletRequest request = Struts2Utils.getRequest();
         HttpServletResponse response = Struts2Utils.getResponse();
 
-        StringBuffer formFrom =request.getRequestURL();
-        String username = request.getParameter("username");
-        String currentURL = request.getParameter("currentURL");
-       // String newformFrom = formFrom.toString();
-        upload("http://localhost:8080/answer",currentURL);
-
-
+        contactBackend("http://localhost:8080/answer", request.getParameter("userid"), request.getParameter("quesid"));
 
         try {
             String ipAddr = ipService.getIp(request);
@@ -241,7 +271,8 @@ public class DwsAnswerAction extends ActionSupport {
             Cookie cookie = CookieUtils.getCookie(request, surveyId);
             Integer effectiveIp = surveyDetail.getEffectiveIp();
             Integer effective = surveyDetail.getEffective();
-            if ((effective != null && effective > 1 && cookie != null) || (effectiveIp != null && effectiveIp == 1 && ipNum > 0)) {
+            if ((effective != null && effective > 1 && cookie != null)
+                    || (effectiveIp != null && effectiveIp == 1 && ipNum > 0)) {
                 return RELOAD_ANSER_ERROR;
             }
             if (ipNum >= refreshNum) {
@@ -260,8 +291,7 @@ public class DwsAnswerAction extends ActionSupport {
             entity.setDataSource(0);
             surveyAnswerManager.saveAnswer(entity, quMaps);
             int effe = surveyDetail.getEffectiveTime();
-            CookieUtils.addCookie(response, surveyId, (ipNum + 1) + "",
-                    effe * 60, "/");
+            CookieUtils.addCookie(response, surveyId, (ipNum + 1) + "", effe * 60, "/");
         } catch (Exception e) {
             e.printStackTrace();
             return RELOAD_ANSWER_FAILURE;
@@ -288,13 +318,13 @@ public class DwsAnswerAction extends ActionSupport {
             Cookie cookie = CookieUtils.getCookie(request, surveyId);
             Integer effectiveIp = surveyDetail.getEffectiveIp();
             Integer effective = surveyDetail.getEffective();
-            if ((effective != null && effective > 1 && cookie != null) || (effectiveIp != null && effectiveIp == 1 && ipNum > 0)) {
+            if ((effective != null && effective > 1 && cookie != null)
+                    || (effectiveIp != null && effectiveIp == 1 && ipNum > 0)) {
                 return RELOAD_ANSER_ERROR_M;
             }
             if (ipNum >= refreshNum) {
                 String code = request.getParameter("jcaptchaInput");
-                if (!imageCaptchaService.validateResponseForID(request
-                        .getSession().getId(), code)) {
+                if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
                     return ANSWER_CODE_ERROR_M;
                 }
             }
@@ -310,8 +340,7 @@ public class DwsAnswerAction extends ActionSupport {
             surveyAnswerManager.saveAnswer(entity, quMaps);
 
             int effe = surveyDetail.getEffectiveTime();
-            CookieUtils.addCookie(response, surveyId, (ipNum + 1) + "",
-                    effe * 60, "/");
+            CookieUtils.addCookie(response, surveyId, (ipNum + 1) + "", effe * 60, "/");
         } catch (Exception e) {
             e.printStackTrace();
             return RELOAD_ANSWER_FAILURE;
@@ -319,39 +348,29 @@ public class DwsAnswerAction extends ActionSupport {
         return RELOAD_ANSWER_SUCCESS_M;
     }
 
-
     public Map<String, Map<String, Object>> buildSaveSurveyMap(HttpServletRequest request) {
         Map<String, Map<String, Object>> quMaps = new HashMap<String, Map<String, Object>>();
-        Map<String, Object> yesnoMaps = WebUtils.getParametersStartingWith(
-                request, "qu_" + QuType.YESNO + "_");
+        Map<String, Object> yesnoMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.YESNO + "_");
         quMaps.put("yesnoMaps", yesnoMaps);
-        Map<String, Object> radioMaps = WebUtils.getParametersStartingWith(
-                request, "qu_"+QuType.RADIO + "_");
-        Map<String, Object> checkboxMaps = WebUtils.getParametersStartingWith(
-                request, "qu_"+QuType.CHECKBOX + "_");
-        Map<String, Object> fillblankMaps = WebUtils.getParametersStartingWith(
-                request, "qu_" + QuType.FILLBLANK + "_");
+        Map<String, Object> radioMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.RADIO + "_");
+        Map<String, Object> checkboxMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.CHECKBOX + "_");
+        Map<String, Object> fillblankMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.FILLBLANK + "_");
         quMaps.put("fillblankMaps", fillblankMaps);
-        Map<String, Object> dfillblankMaps = WebUtils
-                .getParametersStartingWith(request, "qu_"
-                        + QuType.MULTIFILLBLANK + "_");
+        Map<String, Object> dfillblankMaps = WebUtils.getParametersStartingWith(request,
+                "qu_" + QuType.MULTIFILLBLANK + "_");
         for (String key : dfillblankMaps.keySet()) {
             String dfillValue = dfillblankMaps.get(key).toString();
-            Map<String, Object> map = WebUtils.getParametersStartingWith(
-                    request, dfillValue);
+            Map<String, Object> map = WebUtils.getParametersStartingWith(request, dfillValue);
             dfillblankMaps.put(key, map);
         }
         quMaps.put("multifillblankMaps", dfillblankMaps);
-        Map<String, Object> answerMaps = WebUtils.getParametersStartingWith(
-                request, "qu_" + QuType.ANSWER + "_");
+        Map<String, Object> answerMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.ANSWER + "_");
         quMaps.put("answerMaps", answerMaps);
-        Map<String, Object> compRadioMaps = WebUtils.getParametersStartingWith(
-                request, "qu_" + QuType.COMPRADIO + "_");
+        Map<String, Object> compRadioMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.COMPRADIO + "_");
         for (String key : compRadioMaps.keySet()) {
             String enId = key;
             String quItemId = compRadioMaps.get(key).toString();
-            String otherText = Struts2Utils.getParameter("text_qu_"
-                    + QuType.COMPRADIO + "_" + enId + "_" + quItemId);
+            String otherText = Struts2Utils.getParameter("text_qu_" + QuType.COMPRADIO + "_" + enId + "_" + quItemId);
             AnRadio anRadio = new AnRadio();
             anRadio.setQuId(enId);
             anRadio.setQuItemId(quItemId);
@@ -359,17 +378,14 @@ public class DwsAnswerAction extends ActionSupport {
             compRadioMaps.put(key, anRadio);
         }
         quMaps.put("compRadioMaps", compRadioMaps);
-        Map<String, Object> compCheckboxMaps = WebUtils
-                .getParametersStartingWith(request, "qu_" + QuType.COMPCHECKBOX
-                        + "_");//复合多选
+        Map<String, Object> compCheckboxMaps = WebUtils.getParametersStartingWith(request,
+                "qu_" + QuType.COMPCHECKBOX + "_");// 复合多选
         for (String key : compCheckboxMaps.keySet()) {
             String dfillValue = compCheckboxMaps.get(key).toString();
-            Map<String, Object> map = WebUtils.getParametersStartingWith(
-                    request, "tag_" + dfillValue);
+            Map<String, Object> map = WebUtils.getParametersStartingWith(request, "tag_" + dfillValue);
             for (String key2 : map.keySet()) {
                 String quItemId = map.get(key2).toString();
-                String otherText = Struts2Utils.getParameter("text_"
-                        + dfillValue + quItemId);
+                String otherText = Struts2Utils.getParameter("text_" + dfillValue + quItemId);
                 AnCheckbox anCheckbox = new AnCheckbox();
                 anCheckbox.setQuItemId(quItemId);
                 anCheckbox.setOtherText(otherText);
@@ -378,22 +394,19 @@ public class DwsAnswerAction extends ActionSupport {
             compCheckboxMaps.put(key, map);
         }
         quMaps.put("compCheckboxMaps", compCheckboxMaps);
-        Map<String, Object> enumMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.ENUMQU + "_");//枚举
+        Map<String, Object> enumMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.ENUMQU + "_");// 枚举
         quMaps.put("enumMaps", enumMaps);
-        Map<String, Object> quOrderMaps = WebUtils.getParametersStartingWith(
-                request, "qu_" + QuType.ORDERQU + "_");//排序
+        Map<String, Object> quOrderMaps = WebUtils.getParametersStartingWith(request, "qu_" + QuType.ORDERQU + "_");// 排序
         for (String key : quOrderMaps.keySet()) {
             String tag = quOrderMaps.get(key).toString();
-            Map<String, Object> map = WebUtils.getParametersStartingWith(
-                    request, tag);
+            Map<String, Object> map = WebUtils.getParametersStartingWith(request, tag);
             quOrderMaps.put(key, map);
         }
         quMaps.put("quOrderMaps", quOrderMaps);
-        for (String key:radioMaps.keySet()) {
+        for (String key : radioMaps.keySet()) {
             String enId = key;
             String quItemId = radioMaps.get(key).toString();
-            String otherText = Struts2Utils.getParameter("text_qu_"
-                    + QuType.RADIO + "_" + enId + "_" + quItemId);
+            String otherText = Struts2Utils.getParameter("text_qu_" + QuType.RADIO + "_" + enId + "_" + quItemId);
             AnRadio anRadio = new AnRadio();
             anRadio.setQuId(enId);
             anRadio.setQuItemId(quItemId);
@@ -403,12 +416,10 @@ public class DwsAnswerAction extends ActionSupport {
         quMaps.put("compRadioMaps", radioMaps);
         for (String key : checkboxMaps.keySet()) {
             String dfillValue = checkboxMaps.get(key).toString();
-            Map<String, Object> map = WebUtils.getParametersStartingWith(
-                    request, dfillValue);
+            Map<String, Object> map = WebUtils.getParametersStartingWith(request, dfillValue);
             for (String key2 : map.keySet()) {
                 String quItemId = map.get(key2).toString();
-                String otherText = Struts2Utils.getParameter("text_"
-                        + dfillValue + quItemId);
+                String otherText = Struts2Utils.getParameter("text_" + dfillValue + quItemId);
                 AnCheckbox anCheckbox = new AnCheckbox();
                 anCheckbox.setQuItemId(quItemId);
                 anCheckbox.setOtherText(otherText);
@@ -481,8 +492,7 @@ public class DwsAnswerAction extends ActionSupport {
             if (effective > 1) {
                 if (cookie != null) {
                     String cookieValue = cookie.getValue();
-                    if (cookieValue != null
-                            && NumberUtils.isNumeric(cookieValue)) {
+                    if (cookieValue != null && NumberUtils.isNumeric(cookieValue)) {
                         ipNum = Long.parseLong(cookieValue);
                     }
                     surveyStatus = "1";
@@ -503,8 +513,7 @@ public class DwsAnswerAction extends ActionSupport {
             if (ipNum >= refreshNum) {
                 isCheckCode = "3";
             }
-            ajaxResult = "{surveyStatus:\"" + surveyStatus
-                    + "\",isCheckCode:\"" + isCheckCode + "\"}";
+            ajaxResult = "{surveyStatus:\"" + surveyStatus + "\",isCheckCode:\"" + isCheckCode + "\"}";
         } catch (Exception e) {
             e.printStackTrace();
         }

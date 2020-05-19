@@ -585,7 +585,7 @@ public class SurveyAnswerManagerImpl extends
 //			String quName = question.getQuName();
 			String quName = question.getQuTitle();
 			quName=HtmlUtil.removeTagFromText(quName);
-			String titleName =quNum +"、" + quName + "[" + quType.getCnName() + "]";
+			String titleName =quNum +"." + quName + "[" + quType.getCnName() + "]";
 			if (quType == QuType.YESNO) {// 是非题
 				exportUtil.setCell(cellIndex++, titleName);
 			} else if (quType == QuType.RADIO) {// 单选题

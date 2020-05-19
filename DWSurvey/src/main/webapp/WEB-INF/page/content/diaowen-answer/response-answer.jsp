@@ -57,7 +57,7 @@
 				
 						<%--题干 --%>
 						<div class="r-qu-body">
-							<div class="r-qu-body-title"><span class="quCoNum">${i.count }</span>、${en.quTitle }[${en.quType.cnName }]</div>
+							<div class="r-qu-body-title"><span class="quCoNum">${i.count }</span>.${en.quTitle }[${en.quType.cnName }]</div>
 							<div class="r-qu-body-content">
 								<c:choose>
 									<%--是非题 --%>
@@ -229,11 +229,11 @@
 																<c:forEach items="${en.anEnumqus }" var="anEn" varStatus="iStatus">
 																<c:choose>
 																	<c:when test="${anEn.enumItem eq quItem }">
-																		<li>${quItem }、 <input type="text" name="qu_${en.quType }_${en.id }_${quItem}" value="${anEn.answer }"/></li>
+																		<li>${quItem }. <input type="text" name="qu_${en.quType }_${en.id }_${quItem}" value="${anEn.answer }"/></li>
 																		<c:set var="isBreak" value="1"></c:set>
 																	</c:when>
 																	<c:when test="${(fn:length(en.anEnumqus) eq iStatus.count ) && (isBreak eq 0)}">
-																		<li>${quItem }、 <input type="text" name="qu_${en.quType }_${en.id }_${quItem}"/></li>
+																		<li>${quItem }. <input type="text" name="qu_${en.quType }_${en.id }_${quItem}"/></li>
 																		<c:set var="isBreak" value="0"></c:set>
 																	</c:when>
 																</c:choose>
@@ -242,7 +242,7 @@
 														</c:when>
 														<c:otherwise>
 															<c:forEach begin="1" end="${en.paramInt01 }" var="quItem">
-																<li>${quItem }、 <input type="text" name="qu_${en.quType }_${en.id }_${quItem}"/></li>
+																<li>${quItem }. <input type="text" name="qu_${en.quType }_${en.id }_${quItem}"/></li>
 															</c:forEach>
 														</c:otherwise>
 													</c:choose>

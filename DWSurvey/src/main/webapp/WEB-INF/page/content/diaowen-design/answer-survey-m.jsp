@@ -163,7 +163,7 @@
 								<div class="surveyQuItemContent">
 								<fieldset data-role="controlgroup" >
 									<legend>
-										<span class="quTitleNum">${i.count }、</span>
+										<span class="quTitleNum">${i.count }.</span>
 										<span class="quTitleText">${en.quTitle}</span>
 									</legend>
 									<c:forEach items="${en.quRadios }" var="item" >
@@ -208,7 +208,7 @@
 								<div class="surveyQuItemContent">
 								<fieldset data-role="controlgroup" >
 										<legend>
-											<span class="quTitleNum">${i.count }、</span>
+											<span class="quTitleNum">${i.count }.</span>
 											<span class="quTitleText">${en.quTitle}</span>
 										</legend>
 									<c:forEach items="${en.quCheckboxs }" var="item">
@@ -252,7 +252,7 @@
 								<div class="surveyQuItemContent" >
 									 <div style="margin: 0px 5px;">
 									 	<label for="qu_${en.quType }_${en.id }">
-									 		<span class="quTitleNum">${i.count }、</span>
+									 		<span class="quTitleNum">${i.count }.</span>
 											<span class="quTitleText">${en.quTitle}</span>
 									 	</label>
 
@@ -302,7 +302,7 @@
 								<div class="surveyQuItemContent">
 								<fieldset data-role="controlgroup" >
 										<legend>
-											<span class="quTitleNum">${i.count }、</span>
+											<span class="quTitleNum">${i.count }.</span>
 											<span class="quTitleText">${en.quTitle}</span>
 										</legend>
 								<div class="ui-controlgroup-controls ">
@@ -326,7 +326,7 @@
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
 										<legend>
-										<span>${i.count }、</span>
+										<span>${i.count }.</span>
 										<span>${en.quTitle}</span>
 										</legend>
 									</div>
@@ -409,7 +409,7 @@
 							<div class="surveyQuItem">
 								<div class="surveyQuItemContent"  style="min-height: 20px;">
 									<div class="quCoTitle">
-										<%-- <div class="quCoNum quTitleNum">${i.count }、</div> --%>
+										<%-- <div class="quCoNum quTitleNum">${i.count }.</div> --%>
 										<div class="quCoTitleEdit" >${en.quTitle}</div>
 									</div>
 									<hr/>
@@ -446,7 +446,7 @@
 								<div class="surveyQuItemContent">
 									<div class="quCoTitle">
 										<legend>
-											<span class="quTitleNum">${i.count }、</span>
+											<span class="quTitleNum">${i.count }.</span>
 											<span class="quTitleText">${en.quTitle}</span>
 										</legend>
 									</div>
