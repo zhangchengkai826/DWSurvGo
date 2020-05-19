@@ -143,23 +143,27 @@ public class DwsAnswerAction extends ActionSupport {
 
                 ServletContext sc = ServletActionContext.getServletContext();
 
-                String htmlContent = FileUtils.readFileToString(new File(sc.getRealPath("/" + htmlPath)), StandardCharsets.UTF_8);
+                String htmlContent = FileUtils.readFileToString(new File(sc.getRealPath("/" + htmlPath)),
+                        StandardCharsets.UTF_8);
                 String userid = request.getParameter("userid");
                 String quesid = request.getParameter("quesid");
 
                 Document doc = Jsoup.parse(htmlContent);
                 Element form = doc.select("form").first();
-                form.prepend(String.format("<input type=\"hidden\" id=\"userid\" name=\"userid\" value=\"%s\" />", userid));
-                form.prepend(String.format("<input type=\"hidden\" id=\"quesid\" name=\"quesid\" value=\"%s\" />", quesid));
+                form.prepend(
+                        String.format("<input type=\"hidden\" id=\"userid\" name=\"userid\" value=\"%s\" />", userid));
+                form.prepend(
+                        String.format("<input type=\"hidden\" id=\"quesid\" name=\"quesid\" value=\"%s\" />", quesid));
 
                 htmlContent = doc.toString();
 
-                PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\execute.txt");
-                ps.println(request.getQueryString());
-                ps.println(userid);
-                ps.println(quesid);
-                ps.println(htmlContent);
-                ps.close();
+                // PrintStream ps = new
+                // PrintStream("C:\\Users\\andys\\Desktop\\tmp\\execute.txt");
+                // ps.println(request.getQueryString());
+                // ps.println(userid);
+                // ps.println(quesid);
+                // ps.println(htmlContent);
+                // ps.close();
 
                 // request.getRequestDispatcher("/" + htmlPath).forward(request, response);
                 response.getWriter().write(htmlContent);
@@ -219,33 +223,36 @@ public class DwsAnswerAction extends ActionSupport {
             HttpClient httpclient = HttpClientBuilder.create().build();
             HttpPost httppost = new HttpPost(url);
 
+            httppost.setHeader("Content-Type", "application/json");
+            httppost.setHeader("Accept", "application/json");
+
             // json格式的请求数据封装
             JSONObject param = new JSONObject();
             param.put("userid", userid);
             param.put("quesid", quesid);
 
-            PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\param.txt");
-            ps.println(userid.toString());
-            ps.println(quesid.toString());
-            ps.println(param.toString());
-            ps.close();
+            // PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\param.txt");
+            // ps.println(userid.toString());
+            // ps.println(quesid.toString());
+            // ps.println(param.toString());
+            // ps.close();
 
             StringEntity se = new StringEntity(param.toString());
             httppost.setEntity(se);
 
             HttpResponse response = httpclient.execute(httppost);
+            // int statusCode = response.getStatusLine().getStatusCode();
 
-            ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\statusCode.txt");
-            ps.println(response.getStatusLine().getStatusCode());
-            ps.close();
+            // PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\statusCode.txt");
+            // ps.println(statusCode);
+            // ps.close();
 
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == HttpStatus.SC_OK) {
-                HttpEntity resEntity = response.getEntity();
-                // 解析json格式的返回结果
-                JSONObject json = JSONObject.fromObject(EntityUtils.toString(resEntity));
-                EntityUtils.consume(resEntity);
-            }
+            // if (statusCode == HttpStatus.SC_OK) {
+            //     HttpEntity resEntity = response.getEntity();
+            //     // 解析json格式的返回结果
+            //     JSONObject json = JSONObject.fromObject(EntityUtils.toString(resEntity));
+            //     EntityUtils.consume(resEntity);
+            // }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -255,7 +262,15 @@ public class DwsAnswerAction extends ActionSupport {
         HttpServletRequest request = Struts2Utils.getRequest();
         HttpServletResponse response = Struts2Utils.getResponse();
 
-        contactBackend("http://localhost:8080/answer", request.getParameter("userid"), request.getParameter("quesid"));
+        String userid = request.getParameter("userid");
+        String quesid = request.getParameter("quesid");
+
+        // PrintStream ps = new PrintStream("C:\\Users\\andys\\Desktop\\tmp\\save.txt");
+        // ps.println(userid);
+        // ps.println(quesid);
+        // ps.close();
+
+        contactBackend("http://localhost:8080/answer", userid, quesid);
 
         try {
             String ipAddr = ipService.getIp(request);
@@ -275,12 +290,12 @@ public class DwsAnswerAction extends ActionSupport {
                     || (effectiveIp != null && effectiveIp == 1 && ipNum > 0)) {
                 return RELOAD_ANSER_ERROR;
             }
-            if (ipNum >= refreshNum) {
-                String code = request.getParameter("jcaptchaInput");
-                if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
-                    return ANSWER_CODE_ERROR;
-                }
-            }
+            // if (ipNum >= refreshNum) {
+            //     String code = request.getParameter("jcaptchaInput");
+            //     if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
+            //         return ANSWER_CODE_ERROR;
+            //     }
+            // }
             Map<String, Map<String, Object>> quMaps = buildSaveSurveyMap(request);
             String addr = ipService.getCountry(ipAddr);
             String city = ipService.getCurCityByCountry(addr);
@@ -322,12 +337,12 @@ public class DwsAnswerAction extends ActionSupport {
                     || (effectiveIp != null && effectiveIp == 1 && ipNum > 0)) {
                 return RELOAD_ANSER_ERROR_M;
             }
-            if (ipNum >= refreshNum) {
-                String code = request.getParameter("jcaptchaInput");
-                if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
-                    return ANSWER_CODE_ERROR_M;
-                }
-            }
+            // if (ipNum >= refreshNum) {
+            //     String code = request.getParameter("jcaptchaInput");
+            //     if (!imageCaptchaService.validateResponseForID(request.getSession().getId(), code)) {
+            //         return ANSWER_CODE_ERROR_M;
+            //     }
+            // }
 
             Map<String, Map<String, Object>> quMaps = buildSaveSurveyMap(request);
             String addr = ipService.getCountry(ipAddr);
